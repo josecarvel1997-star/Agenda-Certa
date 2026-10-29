@@ -1,0 +1,5 @@
+import Brand from '@/app/components/brand';
+import { redirect } from 'next/navigation';
+import { updatePassword } from '@/app/actions';
+import { createClient } from '@/lib/supabase/server';
+export default async function SetNewPassword({ searchParams }: { searchParams: Promise<{ erro?: string }> }) { const supabase = await createClient(); const { data: { user } } = await supabase.auth.getUser(); if (!user) redirect('/entrar?erro=Acesse+o+link+de+recuperacao+enviado+ao+seu+e-mail.'); const { erro } = await searchParams; return <main className="auth-wrap"><Brand/><section className="auth-card"><span className="eyebrow">RECUPERAÇÃO DE CONTA</span><h1>Escolha uma nova senha</h1><p>Use pelo menos 10 caracteres.</p>{erro && <div className="notice error">{erro}</div>}<form action={updatePassword} className="form-stack"><label>Nova senha<input name="password" type="password" minLength={10} required autoComplete="new-password"/></label><button className="button full">Salvar nova senha</button></form></section></main>; }
